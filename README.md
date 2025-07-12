@@ -8,18 +8,16 @@ Pegawaiku is a web application for managing employee data efficiently and effect
 - TailwindCSS for styling
 - React Hook Form for form handling
 - Zod for form validation
+- React Router for navigation
+- React Query for data fetching
+- Axios for HTTP requests
+- React Toastify for notifications
 
 ## Demo Accounts
 
-| Name            | Email              | Password    |
-| --------------- | ------------------ | ----------- |
-| Budi Santoso    | budi@example.com   | Password123 |
-| Windah Basudara | windah@example.com | Password123 |
-| Ahmad Hidayat   | ahmad@example.com  | Password123 |
-
-## Browser Compatibility
-
-For the best experience, please use **Google Chrome** browser to access this application. Some features may not work properly in other browsers.
+| Name  | Username | Password  |
+| ----- | -------- | --------- |
+| admin | admin    | pastibisa |
 
 ## Features
 
