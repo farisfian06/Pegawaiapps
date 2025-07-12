@@ -2,7 +2,7 @@ import { IoIosLock, IoMdMailOpen } from "react-icons/io";
 import useLogin from "./hooks/useLogin";
 
 const LoginPage = () => {
-  const { form, onSubmit } = useLogin();
+  const { form, onSubmit, isLoading } = useLogin();
   return (
     <section className="dark:bg-gray-900">
       <div className="container flex justify-center min-h-screen items-center">
@@ -21,15 +21,14 @@ const LoginPage = () => {
               <div className="flex gap-2 py-2 px-5 items-center rounded-full bg-slate-50 dark:bg-gray-700 shadow-lg">
                 <IoMdMailOpen size={25} className="text-primary" />
                 <input
-                  {...form.register("email")}
+                  {...form.register("username")}
                   type="text"
-                  name="email"
-                  placeholder="Email"
+                  placeholder="Username"
                   className="bg-transparent w-full text-black dark:text-white px-3 py-2 rounded-full border border-gray-300 dark:border-gray-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:shadow-lg dark:placeholder-gray-400"
                 />
               </div>
               <p className="text-red-500 text-sm pl-4">
-                {form.formState.errors.email?.message}
+                {form.formState.errors.username?.message}
               </p>
             </div>
             <div className="w-full space-y-2">
@@ -48,9 +47,17 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
-              className="hover:cursor-pointer text-center py-2 px-8 bg-gradient-to-br from-primary to-tertiary rounded-full font-primaryBold text-slate-50 shadow-lg hover:opacity-90"
+              disabled={isLoading}
+              className={`hover:cursor-pointer text-center py-2 px-8 bg-gradient-to-br from-primary to-tertiary rounded-full font-primaryBold text-slate-50 shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center`}
             >
-              Sign In
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-slate-50 rounded-full animate-spin border-t-transparent" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </div>
           <div className="bg-gradient-to-br from-primary from-35% to-tertiary w-2/5 px-4 *:text-center flex-col gap-2 justify-center items-center hidden md:flex">
