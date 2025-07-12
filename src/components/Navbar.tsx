@@ -4,14 +4,14 @@ import { useAuth } from "../hooks/useAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 const Navbar = () => {
-  const { logout, user } = useAuth();
+  const { logout, user, isLoggingOut } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
     <nav className="bg-primary p-4 text-white">
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-xl font-bold">
-            Pegawaiku
+            PegawaiApps
           </Link>
 
           {user ? (
@@ -41,9 +41,16 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={logout}
+                  disabled={isLoggingOut}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
                 >
-                  Logout
+                  {isLoggingOut ? (
+                    <div className="flex justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+                    </div>
+                  ) : (
+                    "Logout"
+                  )}
                 </button>
               </div>
             </div>
