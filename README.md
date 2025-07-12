@@ -86,7 +86,6 @@ Backend will run at `http://localhost:8000`
 
 ```bash
 git clone https://github.com/farisfian06/Pegawaiapps.git
-cd pegawaiku-frontend
 ```
 
 ### 6. Install Frontend Dependencies
@@ -98,10 +97,6 @@ npm install
 ### 7. Setup Frontend Environment
 
 - Copy `.env.example` to `.env`
-
-```bash
-cp .env.example .env
-```
 
 - Set your backend API URL:
 
