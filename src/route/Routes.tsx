@@ -5,6 +5,8 @@ import ProfilePage from "../modules/profile";
 import ProtectedRoute from "./ProtectedRoute";
 import PageLayout from "../layout/PageLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import DivisonPage from "../modules/division";
+import EmployeePage from "../modules/employee";
 
 const createRoutes = createBrowserRouter([
   {
@@ -13,6 +15,26 @@ const createRoutes = createBrowserRouter([
       <ProtectedRoute>
         <PageLayout>
           <HomePage />
+        </PageLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/divisions",
+    element: (
+      <ProtectedRoute>
+        <PageLayout>
+          <DivisonPage />
+        </PageLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/employees",
+    element: (
+      <ProtectedRoute>
+        <PageLayout>
+          <EmployeePage />
         </PageLayout>
       </ProtectedRoute>
     ),
