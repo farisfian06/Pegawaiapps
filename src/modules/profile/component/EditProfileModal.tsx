@@ -1,8 +1,8 @@
 import React from "react";
 import { FiUser } from "react-icons/fi";
-import Input from "../../../components/Input";
 import type { ProfilePayload } from "../schema/profileSchema";
 import { useEditProfile } from "../hooks/useEditProfile";
+import Input from "../../../components/Input";
 
 interface EditProfileProps {
   isOpen: boolean;

@@ -1,21 +1,29 @@
 import React from "react";
-import { FiUser } from "react-icons/fi";
-import Input from "../../../components/Input";
+import { FiUser, FiLoader } from "react-icons/fi";
 import { useAddEmployee } from "../hooks/useAddEmployee";
-import type { EmployeePayload } from "../schema/employeeSchema";
+import Input from "../../../components/Input";
+import FileInput from "../../../components/FileInput";
+import DropdownInput from "../../../components/DropdownInput";
+import { useDivisions } from "../../division/hooks/useDivision";
 
 interface AddEmployeeModalProps {
   isOpen: boolean;
   onCancel: () => void;
-  addEmployeeFromForm: (data: EmployeePayload) => void;
 }
 
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   isOpen,
   onCancel,
-  addEmployeeFromForm,
 }) => {
-  const { form, onSubmit } = useAddEmployee(onCancel, addEmployeeFromForm);
+  const { form, onSubmit, isLoading } = useAddEmployee(onCancel);
+  const { data } = useDivisions();
+
+  const divisionOptions =
+    data?.data?.divisions.map((division) => ({
+      label: division.name,
+      value: division.id,
+    })) || [];
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/40 dark:bg-black/60">
@@ -42,17 +50,31 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
             placeholder="Enter employee phone number"
             error={form.formState.errors.phone?.message}
           />
-          <Input
-            {...form.register("divisi")}
+          <DropdownInput
+            {...form.register("division")}
             label="Division"
             placeholder="Enter employee division"
-            error={form.formState.errors.divisi?.message}
+            error={form.formState.errors.division?.message}
+            options={divisionOptions}
+            value={form.watch("division")}
+            onChange={(e) => {
+              console.log(e.target.value);
+              form.setValue("division", e.target.value);
+            }}
           />
           <Input
-            {...form.register("posisi")}
+            {...form.register("position")}
             label="Position"
             placeholder="Enter employee position"
-            error={form.formState.errors.posisi?.message}
+            error={form.formState.errors.position?.message}
+          />
+          <FileInput
+            {...form.register("image")}
+            onFileChange={(val) => {
+              if (val) {
+                form.setValue("image", val);
+              }
+            }}
           />
           <div className="mt-4 flex justify-between gap-2">
             <button
@@ -64,9 +86,17 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 grow rounded-lg bg-primary text-white hover:bg-primary/90 dark:hover:bg-primary/80 transition-colors"
+              disabled={isLoading}
+              className="px-4 py-2 grow rounded-lg bg-primary text-white hover:bg-primary/90 dark:hover:bg-primary/80 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Save Change
+              {isLoading ? (
+                <>
+                  <FiLoader className="animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Save Change"
+              )}
             </button>
           </div>
         </form>

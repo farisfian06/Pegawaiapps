@@ -1,129 +1,80 @@
-import { useState } from "react";
-import { useSearch } from "./hooks/useSearch";
-import { useEmployee } from "./hooks/useEmployee";
-import Search from "../../components/Search";
-import Pagination from "../../components/Pagination";
-import AddEmployeeModal from "./component/AddEmployeeModal";
-import Table from "../../components/Table";
-import EditEmployeeModal from "./component/EditEmployeeModal";
-import type { EmployeePayload } from "./schema/employeeSchema";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
-
-const ITEMS_PER_PAGE = 5;
+import { FiUsers, FiGrid } from "react-icons/fi";
+import { useDivisions } from "../division/hooks/useDivision";
+import { useEmployees } from "../employee/hooks/useEmployee";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  const {
-    data,
-    deleteEmployee,
-    addDummyEmployee,
-    addEmployeeFromForm,
-    editEmployee,
-  } = useEmployee();
-  const { search, page, paginatedData, goToPage, handleSearch, totalPages } =
-    useSearch({ data, itemsPerPage: ITEMS_PER_PAGE });
+  const { data: dataEmployee, isLoading: isLoadingEmployee } = useEmployees();
+  const { data: dataDivision, isLoading: isLoadingDivision } = useDivisions();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editData, setEditData] = useState<EmployeePayload | null>(null);
+  console.log(dataEmployee?.data.employees);
 
   return (
-    <>
-      <section className="bg-white dark:bg-gray-900 transition-colors duration-200">
-        <div className="container">
-          <div className="min-h-screen py-8 md:py-12 px-4 mx-auto">
-            <Search
-              value={search}
-              onChange={handleSearch}
-              onAddDummy={() => {
-                addDummyEmployee();
-              }}
-              onAddEmployee={() => {
-                setIsOpen(true);
-              }}
-            />
-            <div className="w-full rounded-xl overflow-hidden">
-              <Table hoverable>
-                <Table.Head>
-                  <Table.Row>
-                    <Table.HeadCell>No</Table.HeadCell>
-                    <Table.HeadCell>Name</Table.HeadCell>
-                    <Table.HeadCell>Phone</Table.HeadCell>
-                    <Table.HeadCell>Division</Table.HeadCell>
-                    <Table.HeadCell>Position</Table.HeadCell>
-                    <Table.HeadCell>
-                      <span className="sr-only">Actions</span>
-                    </Table.HeadCell>
-                  </Table.Row>
-                </Table.Head>
-                <Table.Body>
-                  {paginatedData.length > 0 ? (
-                    paginatedData.map((employee, idx) => (
-                      <Table.Row>
-                        <Table.Cell>
-                          {(page - 1) * ITEMS_PER_PAGE + idx + 1}
-                        </Table.Cell>
-                        <Table.Cell>{employee.name}</Table.Cell>
-                        <Table.Cell>{employee.phone}</Table.Cell>
-                        <Table.Cell>{employee.divisi}</Table.Cell>
-                        <Table.Cell>{employee.posisi}</Table.Cell>
-                        <Table.Cell className="flex gap-2">
-                          <button
-                            onClick={() => {
-                              setIsEditOpen(true);
-                              setEditData(employee);
-                            }}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            <FiEdit2 size={18} />
-                          </button>
-                          <button
-                            onClick={() => deleteEmployee(employee.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <FiTrash2 size={18} />
-                          </button>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  ) : (
-                    <Table.Row>
-                      <Table.Cell colSpan={6} className="text-center">
-                        Tidak ada data ditemukan.
-                      </Table.Cell>
-                    </Table.Row>
-                  )}
-                </Table.Body>
-              </Table>
-            </div>
-            <div className="mt-4">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={goToPage}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="dark:bg-gray-900">
+      <div className="container py-12 min-h-[calc(100vh-200px)]">
+        <h1 className="text-2xl font-bold mb-6 dark:text-white">
+          Dashboard Overview
+        </h1>
 
-      <AddEmployeeModal
-        isOpen={isOpen}
-        onCancel={() => setIsOpen(false)}
-        addEmployeeFromForm={addEmployeeFromForm}
-      />
-      <EditEmployeeModal
-        editEmploye={editEmployee}
-        onCancel={() => setIsEditOpen(false)}
-        initialData={{
-          id: editData?.id || 0,
-          divisi: editData?.divisi || "",
-          name: editData?.name || "",
-          posisi: editData?.posisi || "",
-          phone: editData?.phone || "",
-        }}
-        isOpen={isEditOpen}
-      />
-    </>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Employee Stats Card */}
+          <Link
+            to="/employees"
+            className="block transform transition-all duration-300 hover:scale-105"
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-all hover:shadow-xl hover:bg-gray-50 dark:hover:bg-gray-700">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-tertiary rounded-full">
+                  <FiUsers className="w-6 h-6 text-secondary" />
+                </div>
+                <div>
+                  <h2 className="text-gray-600 dark:text-gray-400 text-sm">
+                    Total Employees
+                  </h2>
+                  <p className="text-2xl font-semibold dark:text-white">
+                    {isLoadingEmployee ? (
+                      <span className="text-gray-400 dark:text-gray-500">
+                        Loading...
+                      </span>
+                    ) : (
+                      dataEmployee?.data.employees.length || 0
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Division Stats Card */}
+          <Link
+            to="/divisions"
+            className="block transform transition-all duration-300 hover:scale-105"
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-all hover:shadow-xl hover:bg-gray-50 dark:hover:bg-gray-700">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-tertiary rounded-full">
+                  <FiGrid className="w-6 h-6 text-secondary" />
+                </div>
+                <div>
+                  <h2 className="text-gray-600 dark:text-gray-400 text-sm">
+                    Total Divisions
+                  </h2>
+                  <p className="text-2xl font-semibold dark:text-white">
+                    {isLoadingDivision ? (
+                      <span className="text-gray-400 dark:text-gray-500">
+                        Loading...
+                      </span>
+                    ) : (
+                      dataDivision?.data.divisions.length || 0
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 };
 

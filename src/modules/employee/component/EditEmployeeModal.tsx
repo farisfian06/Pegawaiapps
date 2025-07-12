@@ -1,27 +1,34 @@
 import React from "react";
 import { FiUser } from "react-icons/fi";
-import Input from "../../../components/Input";
 import type { EmployeePayload } from "../schema/employeeSchema";
 import { useEditEmployee } from "../hooks/useEditEmployee";
+import Input from "../../../components/Input";
+import { useDivisions } from "../../division/hooks/useDivision";
+import DropdownInput from "../../../components/DropdownInput";
+import FileInput from "../../../components/FileInput";
 
 interface EditEmployeeModalProps {
   isOpen: boolean;
   onCancel: () => void;
   initialData: EmployeePayload;
-  editEmploye: (data: EmployeePayload) => void;
 }
 
 const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
   isOpen,
   onCancel,
-  editEmploye,
   initialData,
 }) => {
-  const { form, onSubmit } = useEditEmployee(
-    onCancel,
-    initialData,
-    editEmploye
-  );
+  const { form, onSubmit } = useEditEmployee(onCancel, initialData);
+  const { data } = useDivisions();
+
+  const divisionOptions =
+    data?.data?.divisions.map((division) => ({
+      label: division.name,
+      value: division.id,
+    })) || [];
+
+  const image = form.watch("image");
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/40 dark:bg-black/60">
@@ -48,17 +55,32 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
             placeholder="Enter employee phone number"
             error={form.formState.errors.phone?.message}
           />
-          <Input
-            {...form.register("divisi")}
+          <DropdownInput
+            {...form.register("division")}
             label="Division"
             placeholder="Enter employee division"
-            error={form.formState.errors.divisi?.message}
+            error={form.formState.errors.division?.message}
+            options={divisionOptions}
+            value={form.watch("division")}
+            onChange={(e) => {
+              console.log(e.target.value);
+              form.setValue("division", e.target.value);
+            }}
           />
           <Input
-            {...form.register("posisi")}
+            {...form.register("position")}
             label="Position"
             placeholder="Enter employee position"
-            error={form.formState.errors.posisi?.message}
+            error={form.formState.errors.position?.message}
+          />
+          <FileInput
+            {...form.register("image")}
+            onFileChange={(val) => {
+              if (val) {
+                form.setValue("image", val);
+              }
+            }}
+            initialFileUrl={typeof image === "string" ? image : undefined}
           />
           <div className="mt-4 flex justify-between gap-2">
             <button
