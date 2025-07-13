@@ -7,8 +7,6 @@ const HomePage = () => {
   const { data: dataEmployee, isLoading: isLoadingEmployee } = useEmployees();
   const { data: dataDivision, isLoading: isLoadingDivision } = useDivisions();
 
-  console.log(dataEmployee?.data.employees);
-
   return (
     <section className="dark:bg-gray-900">
       <div className="container py-12 min-h-[calc(100vh-200px)]">
@@ -37,7 +35,7 @@ const HomePage = () => {
                         Loading...
                       </span>
                     ) : (
-                      dataEmployee?.data.employees.length || 0
+                      dataEmployee?.data?.employees?.length || 0
                     )}
                   </p>
                 </div>
@@ -65,7 +63,7 @@ const HomePage = () => {
                         Loading...
                       </span>
                     ) : (
-                      dataDivision?.data.divisions.length || 0
+                      dataDivision?.data?.divisions?.length || 0
                     )}
                   </p>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FiUploadCloud, FiFile, FiImage, FiXCircle } from "react-icons/fi";
+import { FiUploadCloud, FiFile, FiXCircle } from "react-icons/fi";
 
 interface FileInputProps {
   label?: string;
